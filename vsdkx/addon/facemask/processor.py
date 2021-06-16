@@ -88,6 +88,3 @@ class EntranceProcessor(Addon):
             if x_center / width > self.line:
                 return True
         return False
-
-    def pre_process(self, frame: ndarray) -> ndarray:
-        pass
