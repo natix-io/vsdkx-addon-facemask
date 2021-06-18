@@ -2,7 +2,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(
     name='vsdkx-addon-facemask',
-    url='https://gitlab.com/natix/visiondeploy/aiconnector',
+    url='https://gitlab.com/natix/cvison/vsdkx/vsdkx-addon-facemask',
     author='Helmut',
     author_email='helmut@natix.io',
     namespace_packages=['vsdkx', 'vsdkx.addon'],
