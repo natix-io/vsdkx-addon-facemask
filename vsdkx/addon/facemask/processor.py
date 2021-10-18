@@ -13,7 +13,7 @@ class EntranceProcessor(Addon):
                  model_config: dict, drawing_config: dict):
         super().__init__(addon_config, model_settings, model_config,
                          drawing_config)
-        self.direction = model_settings['camera_direction']
+        self.direction = addon_config['camera_direction']
         self.mask_threshold = model_settings['mask_threshold']
         self.line = model_settings['line_border']
         self.mask_on = model_config['mask_on']
