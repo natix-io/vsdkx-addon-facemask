@@ -16,8 +16,8 @@ class EntranceProcessor(Addon):
         self.direction = addon_config['camera_direction']
         self.mask_threshold = addon_config['mask_threshold']
         self.line = addon_config['line_border']
-        self.mask_on = addon_config['mask_on']
-        self.mask_off = addon_config['mask_off']
+        self.mask_on = model_config['mask_on']
+        self.mask_off = model_config['mask_off']
 
     def post_process(self, frame: ndarray, inference: Inference) -> Inference:
         """
