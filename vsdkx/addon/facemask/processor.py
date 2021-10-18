@@ -14,8 +14,8 @@ class EntranceProcessor(Addon):
         super().__init__(addon_config, model_settings, model_config,
                          drawing_config)
         self.direction = addon_config['camera_direction']
-        self.mask_threshold = model_settings['mask_threshold']
-        self.line = model_settings['line_border']
+        self.mask_threshold = addon_config['mask_threshold']
+        self.line = addon_config['line_border']
         self.mask_on = model_config['mask_on']
         self.mask_off = model_config['mask_off']
 
