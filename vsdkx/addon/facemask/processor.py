@@ -1,5 +1,5 @@
 from vsdkx.core.interfaces import Addon
-from vsdkx.core.structs import Inference
+from vsdkx.core.structs import AddonObject, Inference
 from numpy import ndarray
 
 
@@ -19,24 +19,27 @@ class EntranceProcessor(Addon):
         self.mask_on = model_config['mask_on']
         self.mask_off = model_config['mask_off']
 
-    def post_process(self, frame: ndarray, inference: Inference) -> Inference:
+    def post_process(self, addon_object: AddonObject) -> AddonObject:
         """
         Check if there are people on frame close to camera, if they are
         wearing masks and if someone has entered without a mask
 
         Args:
-            frame (ndarray): the frame data
-            inference (Inference): the result from the ai
+            addon_object (AddonObject): addon object containing information
+            about inference,
+            frame, other addons shared data
 
         Returns:
-            (Inference): the result of this processor
+            (AddonObject): addon object has updated information for inference
+            result and/or shared information:
         """
         masks_on = True
         people_on_frame = False
         no_mask_entrance = 0
         num_face_masks = 0
 
-        for box, class_id in zip(inference.boxes, inference.classes):
+        for box, class_id in zip(addon_object.inference.boxes,
+                                 addon_object.inference.classes):
             box_height = box[3] - box[1]
             box_width = box[2] - box[0]
 
@@ -45,7 +48,9 @@ class EntranceProcessor(Addon):
 
             # filter face boxes by threshold
             if (box_height * box_width) > \
-                    (self.mask_threshold * frame.shape[1] * frame.shape[0]):
+                    (self.mask_threshold *
+                     addon_object.frame.shape[1] *
+                     addon_object.frame.shape[0]):
                 people_on_frame = True
 
                 # if class id is 0 then mask is missing so masks_on isn't True
@@ -55,11 +60,14 @@ class EntranceProcessor(Addon):
                     masks_on = False
 
                     # as the mask is missing, check for the violation
-                    if self.cross_entrance(box, frame.shape[1], frame.shape[0]):
+                    if self.cross_entrance(box,
+                                           addon_object.frame.shape[1],
+                                           addon_object.frame.shape[0]):
                         no_mask_entrance += 1
-        inference.extra["entrance_check"] = (people_on_frame, masks_on,
-                                             num_face_masks)
-        return inference
+        addon_object.inference.extra["entrance_check"] = (people_on_frame,
+                                                          masks_on,
+                                                          num_face_masks)
+        return addon_object
 
     def cross_entrance(self, box, width, height):
         """
